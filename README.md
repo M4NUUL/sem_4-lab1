@@ -13,7 +13,7 @@
 - PostgreSQL
 - REST API + JSON
 
-JWT, OAuth, Redux, Docker и WebSocket не используются.
+JWT, OAuth, Redux, Docker и WebSocket не используются. Для учебной авторизации используется серверный session-token.
 
 ## Роли RBAC
 
@@ -23,7 +23,7 @@ JWT, OAuth, Redux, Docker и WebSocket не используются.
 - `operator` — оператор безопасности. Может смотреть список, детали, пользоваться поиском и фильтрами, менять статус инцидента.
 - `admin` — администратор. Может создавать, редактировать, удалять инциденты и управлять пользователями.
 
-Роль после входа хранится в `localStorage`. На backend роль передается в заголовке `x-user-role`.
+После входа frontend хранит в `localStorage` логин, роль для отображения интерфейса и session-token. Защищенные backend-операции проверяют роль по токену из заголовка `Authorization: Bearer <token>`, а не доверяют роли из браузера.
 
 ## Тестовые пользователи
 
@@ -109,14 +109,14 @@ CREATE TABLE incidents (
 - `POST /api/auth/login` — учебный вход
 - `GET /api/incidents?limit=5&offset=0` — список с пагинацией
 - `GET /api/incidents/:id` — детальная информация
-- `POST /api/incidents` — создание, только `admin`
-- `PUT /api/incidents/:id` — полное редактирование, только `admin`
-- `PATCH /api/incidents/:id/status` — изменение статуса, `operator` и `admin`
-- `DELETE /api/incidents/:id` — удаление, только `admin`
-- `GET /api/users` — список пользователей, только `admin`
-- `POST /api/users` — создание пользователя, только `admin`
-- `PUT /api/users/:id` — редактирование пользователя, только `admin`
-- `DELETE /api/users/:id` — удаление пользователя, только `admin`
+- `POST /api/incidents` — создание, только `admin`, нужен `Authorization: Bearer <token>`
+- `PUT /api/incidents/:id` — полное редактирование, только `admin`, нужен `Authorization: Bearer <token>`
+- `PATCH /api/incidents/:id/status` — изменение статуса, `operator` и `admin`, нужен `Authorization: Bearer <token>`
+- `DELETE /api/incidents/:id` — удаление, только `admin`, нужен `Authorization: Bearer <token>`
+- `GET /api/users` — список пользователей, только `admin`, нужен `Authorization: Bearer <token>`
+- `POST /api/users` — создание пользователя, только `admin`, нужен `Authorization: Bearer <token>`
+- `PUT /api/users/:id` — редактирование пользователя, только `admin`, нужен `Authorization: Bearer <token>`
+- `DELETE /api/users/:id` — удаление пользователя, только `admin`, нужен `Authorization: Bearer <token>`
 
 ## SPA-маршруты
 

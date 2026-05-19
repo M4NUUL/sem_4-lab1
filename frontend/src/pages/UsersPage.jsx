@@ -23,6 +23,8 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const currentLogin = localStorage.getItem('login') || '';
+  const adminCount = users.filter((user) => user.role === 'admin').length;
 
   const loadUsers = async () => {
     try {
@@ -79,16 +81,21 @@ export default function UsersPage() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (user) => {
+    if (user.role === 'admin' && adminCount <= 1) {
+      setError('Нельзя удалить единственного администратора');
+      return;
+    }
+
     if (!window.confirm('Удалить пользователя?')) {
       return;
     }
 
     try {
-      await deleteUser(id);
-      setUsers((current) => current.filter((user) => user.id !== id));
+      await deleteUser(user.id);
+      setUsers((current) => current.filter((item) => item.id !== user.id));
     } catch (err) {
-      setError('Не удалось удалить пользователя');
+      setError(err.response?.data?.error || 'Не удалось удалить пользователя');
     }
   };
 
@@ -146,7 +153,13 @@ export default function UsersPage() {
               <span>{roleNames[user.role]}</span>
               <div className="card-actions">
                 <button type="button" onClick={() => startEdit(user)}>Редактировать</button>
-                <button type="button" onClick={() => handleDelete(user.id)}>Удалить</button>
+                <button
+                  type="button"
+                  disabled={user.login === currentLogin && user.role === 'admin' && adminCount <= 1}
+                  onClick={() => handleDelete(user)}
+                >
+                  Удалить
+                </button>
               </div>
             </div>
           ))}

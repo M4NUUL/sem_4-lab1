@@ -88,11 +88,10 @@ export default function IncidentFormPage() {
 
     try {
       setSaving(true);
-      const role = localStorage.getItem('role') || 'guest';
       if (isEdit) {
-        await updateIncident(id, form, role);
+        await updateIncident(id, form);
       } else {
-        await createIncident(form, role);
+        await createIncident(form);
       }
       navigate('/');
     } catch (err) {
