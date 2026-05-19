@@ -35,7 +35,7 @@ JWT, OAuth, Redux, Docker и WebSocket не используются.
 ## Структура проекта
 
 ```text
-security-incidents-lab1/
+./
   frontend/
     src/
       api/
@@ -143,40 +143,40 @@ GET /api/incidents?limit=5&offset=5
 Инициализация базы:
 
 ```bash
-cd security-incidents-lab1/backend
+cd backend
 npm.cmd run init-db
 ```
 
 Запуск backend:
 
 ```bash
-cd security-incidents-lab1/backend
+cd backend
 npm.cmd start
 ```
 
 Запуск frontend:
 
 ```bash
-cd security-incidents-lab1/frontend
+cd frontend
 npm.cmd start
 ```
 
 Если стандартные порты заняты:
 
 ```bash
-cd security-incidents-lab1/backend
+cd backend
 $env:PORT='5053'; npm.cmd start
 ```
 
 ```bash
-cd security-incidents-lab1/frontend
+cd frontend
 $env:PORT='3003'; $env:REACT_APP_API_URL='http://localhost:5053/api'; npm.cmd start
 ```
 
 ## Проверка
 
 ```bash
-cd security-incidents-lab1/backend
+cd backend
 npm.cmd run smoke
 ```
 

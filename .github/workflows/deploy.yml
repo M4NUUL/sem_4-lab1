@@ -1,0 +1,29 @@
+name: Deploy frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/m4nuul/sem_4-lab1/security-incidents-lab1
+            git pull origin main
+
+            cd frontend
+            npm install
+            npm run build
+
+            rm -rf /volume1/web/secure-spa/*
+            cp -r build/* /volume1/web/secure-spa/

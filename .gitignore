@@ -1,14 +1,18 @@
 # Dependencies
 node_modules/
 **/node_modules/
+.pnp
+.pnp.js
 
-# Build output
+# Build and test output
 build/
 dist/
+coverage/
 **/build/
 **/dist/
+**/coverage/
 
-# Environment files
+# Local environment files
 .env
 .env.local
 .env.*.local
@@ -23,11 +27,9 @@ yarn-error.log*
 *.log
 *.err
 
-# OS and editor files
+# OS, editor, and cache files
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
-
-# React cache
 .eslintcache
