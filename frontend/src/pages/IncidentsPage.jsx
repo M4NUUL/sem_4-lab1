@@ -17,7 +17,6 @@ export default function IncidentsPage() {
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
   const observerTarget = useRef(null);
-  const role = localStorage.getItem('role') || 'guest';
 
   const loadIncidents = useCallback(async (append = false, offset = 0) => {
     try {
@@ -32,6 +31,7 @@ export default function IncidentsPage() {
       setHasMore(data.length === LIMIT);
     } catch (err) {
       setError('Не удалось загрузить инциденты');
+      setHasMore(false);
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -43,7 +43,7 @@ export default function IncidentsPage() {
   }, [loadIncidents]);
 
   useEffect(() => {
-    if (!observerTarget.current || !hasMore || typeof IntersectionObserver === 'undefined') {
+    if (!observerTarget.current || !hasMore || error || typeof IntersectionObserver === 'undefined') {
       return undefined;
     }
 
@@ -55,7 +55,7 @@ export default function IncidentsPage() {
 
     observer.observe(observerTarget.current);
     return () => observer.disconnect();
-  }, [hasMore, incidents.length, loadIncidents, loading, loadingMore]);
+  }, [error, hasMore, incidents.length, loadIncidents, loading, loadingMore]);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Удалить инцидент?')) {
@@ -63,7 +63,7 @@ export default function IncidentsPage() {
     }
 
     try {
-      await deleteIncident(id, role);
+      await deleteIncident(id);
       setIncidents((current) => current.filter((incident) => incident.id !== id));
     } catch (err) {
       setError('Не удалось удалить инцидент');
@@ -72,7 +72,7 @@ export default function IncidentsPage() {
 
   const handleStatusChange = async (id, nextStatus) => {
     try {
-      const updated = await updateIncidentStatus(id, nextStatus, role);
+      const updated = await updateIncidentStatus(id, nextStatus);
       setIncidents((current) => current.map((incident) => (
         incident.id === id ? updated : incident
       )));

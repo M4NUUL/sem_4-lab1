@@ -29,7 +29,7 @@ export default function IncidentDetailPage() {
 
   const handleStatusChange = async (event) => {
     try {
-      const updated = await updateIncidentStatus(id, event.target.value, role);
+      const updated = await updateIncidentStatus(id, event.target.value);
       setIncident(updated);
     } catch (err) {
       setError('Не удалось изменить статус');

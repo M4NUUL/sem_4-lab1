@@ -27,6 +27,7 @@ export default function LoginPage() {
       const user = await login(form.login, form.password);
       localStorage.setItem('login', user.login);
       localStorage.setItem('role', user.role);
+      localStorage.setItem('token', user.token);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Ошибка входа');
@@ -45,7 +46,7 @@ export default function LoginPage() {
       <form className="form" onSubmit={handleSubmit}>
         <label>
           Логин
-          <input name="login" value={form.login} onChange={handleChange} placeholder="operator" />
+          <input name="login" value={form.login} onChange={handleChange} placeholder="login" />
         </label>
 
         <label>
@@ -55,7 +56,7 @@ export default function LoginPage() {
             name="password"
             value={form.password}
             onChange={handleChange}
-            placeholder="operator123"
+            placeholder="password"
           />
         </label>
 

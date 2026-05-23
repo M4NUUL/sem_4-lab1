@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS user_sessions;
 DROP TABLE IF EXISTS incidents;
 DROP TABLE IF EXISTS users;
 
@@ -6,6 +7,12 @@ CREATE TABLE users (
   login TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('guest', 'operator', 'admin'))
+);
+
+CREATE TABLE user_sessions (
+  token TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE incidents (

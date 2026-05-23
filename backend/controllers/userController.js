@@ -46,6 +46,21 @@ const updateUser = async (req, res) => {
   }
 
   try {
+    const { rows: currentRows } = await db.query('SELECT id, role FROM users WHERE id = $1', [req.params.id]);
+
+    if (currentRows.length === 0) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    if (currentRows[0].role === 'admin' && role !== 'admin') {
+      const { rows: adminRows } = await db.query('SELECT COUNT(*) FROM users WHERE role = $1', ['admin']);
+      const adminCount = Number(adminRows[0].count);
+
+      if (adminCount <= 1) {
+        return res.status(400).json({ error: 'Нельзя снять роль с единственного администратора' });
+      }
+    }
+
     const values = password
       ? [login, password, role, req.params.id]
       : [login, role, req.params.id];
@@ -54,10 +69,6 @@ const updateUser = async (req, res) => {
       : 'UPDATE users SET login = $1, role = $2 WHERE id = $3 RETURNING id, login, role';
 
     const { rows } = await db.query(sql, values);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
 
     res.json(mapUser(rows[0]));
   } catch (error) {
@@ -71,6 +82,21 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
+    const { rows } = await db.query('SELECT id, role FROM users WHERE id = $1', [req.params.id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    if (rows[0].role === 'admin') {
+      const { rows: adminRows } = await db.query('SELECT COUNT(*) FROM users WHERE role = $1', ['admin']);
+      const adminCount = Number(adminRows[0].count);
+
+      if (adminCount <= 1) {
+        return res.status(400).json({ error: 'Нельзя удалить единственного администратора' });
+      }
+    }
+
     const { rowCount } = await db.query('DELETE FROM users WHERE id = $1', [req.params.id]);
 
     if (rowCount === 0) {
