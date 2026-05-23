@@ -25,6 +25,16 @@ jobs:
             git fetch origin
             git reset --hard origin/main
 
+            cd backend
+            npm install
+            if [ -f backend.pid ] && kill -0 "$(cat backend.pid)" 2>/dev/null; then
+              kill "$(cat backend.pid)"
+              sleep 2
+            fi
+            nohup node index.js > backend.log 2>&1 &
+            echo $! > backend.pid
+
+            cd ..
             cd frontend
             npm install
             export REACT_APP_API_URL=https://api-secure-spa.m4nuul.ru/api

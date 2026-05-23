@@ -25,6 +25,12 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const user = await login(form.login, form.password);
+
+      if (!user.token) {
+        setError('РЎРµСЂРІРµСЂ РЅРµ РІРµСЂРЅСѓР» С‚РѕРєРµРЅ РІС…РѕРґР°');
+        return;
+      }
+
       localStorage.setItem('login', user.login);
       localStorage.setItem('role', user.role);
       localStorage.setItem('token', user.token);

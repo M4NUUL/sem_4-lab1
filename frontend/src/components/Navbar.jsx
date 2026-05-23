@@ -9,7 +9,9 @@ const roleNames = {
 export default function Navbar() {
   const navigate = useNavigate();
   const login = localStorage.getItem('login');
-  const role = localStorage.getItem('role') || 'guest';
+  const token = localStorage.getItem('token');
+  const isAuthenticated = Boolean(login && token);
+  const role = isAuthenticated ? localStorage.getItem('role') || 'guest' : 'guest';
 
   const handleLogout = () => {
     localStorage.removeItem('login');
@@ -23,16 +25,16 @@ export default function Navbar() {
       <Link className="brand" to="/">Инциденты безопасности</Link>
       <nav>
         <span className="user-chip">
-          {login ? `${login} (${roleNames[role]})` : roleNames.guest}
+          {isAuthenticated ? `${login} (${roleNames[role]})` : roleNames.guest}
         </span>
         <Link to="/">Инциденты</Link>
-        {role === 'admin' && (
+        {isAuthenticated && role === 'admin' && (
           <>
             <Link className="nav-button" to="/add">Добавить инцидент</Link>
             <Link to="/admin/users">Пользователи</Link>
           </>
         )}
-        {login ? (
+        {isAuthenticated ? (
           <button className="nav-link-button" type="button" onClick={handleLogout}>Выйти</button>
         ) : (
           <Link className="nav-button" to="/login">Войти</Link>
