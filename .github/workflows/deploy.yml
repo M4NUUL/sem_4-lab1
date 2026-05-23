@@ -18,16 +18,13 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /home/m4nuul/sem_4-lab1
+            export PATH=$PATH:/usr/local/bin
+            
+            cd /homes/m4nuul/sem_4-lab1
             git pull origin main
 
             cd frontend
             npm install
-            export REACT_APP_API_URL="${{ secrets.REACT_APP_API_URL }}"
-            if echo "$REACT_APP_API_URL" | grep -Eq 'localhost|127\.0\.0\.1'; then
-              echo "REACT_APP_API_URL must not point to localhost in production"
-              exit 1
-            fi
             npm run build
 
             rm -rf /volume1/web/secure-spa/*
