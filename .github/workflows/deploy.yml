@@ -27,6 +27,7 @@ jobs:
 
             cd frontend
             npm install
+            export REACT_APP_API_URL=https://api-secure-spa.m4nuul.ru/api
             npm run build
 
             rm -rf /volume1/web/secure-spa/*
