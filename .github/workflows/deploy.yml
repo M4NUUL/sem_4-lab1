@@ -20,7 +20,7 @@ jobs:
           script: |
             export PATH=$PATH:/usr/local/bin
             
-            cd /homes/m4nuul/sem_4-lab1
+            cd /var/services/homes/m4nuul/sem_4-lab1
             git pull origin main
 
             cd frontend
