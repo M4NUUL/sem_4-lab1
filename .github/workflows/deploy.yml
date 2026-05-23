@@ -18,10 +18,12 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            set -e
             export PATH=$PATH:/usr/local/bin
             
             cd /var/services/homes/m4nuul/sem_4-lab1
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
 
             cd frontend
             npm install
